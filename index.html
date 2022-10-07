@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Cv integration</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script async src="opencv.js"></script>
+</head>
+<body>
+    <img id="input_image">
+    <input type="file" id="file_input">
+    <canvas id='output'></canvas>
+</body>
+
+<script>
+    const apiURL="http://127.0.0.1:5000/test"
+    let img_input=document.getElementById("input_image");
+    let file_input=document.getElementById("file_input");
+
+    file_input.addEventListener('change', (e) => {
+        img_input.src=URL.createObjectURL(e.target.files[0])
+
+    },false);
+
+    img_input.onload=function(){
+    var byte=[]
+    const mat = cv.imread(img_input);
+    var cols = mat.cols;
+    var rows = mat.rows;
+    var elemSize = mat.elemSize();
+    var data = [cols * rows * elemSize];
+    console.log(data);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", apiURL);   
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.setRequestHeader('content-type','image/jpeg');
+    xhr.send(data);
+    }
+</script>
+</html>
